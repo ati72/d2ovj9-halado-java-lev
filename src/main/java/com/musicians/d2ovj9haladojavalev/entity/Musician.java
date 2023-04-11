@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "musician")
 @Data
@@ -36,4 +38,6 @@ public class Musician {
     private int yearOfBirth;
     @NotBlank
     private String instrument;
+    @ManyToMany
+    private Set<Artist> associatedActs;
 }

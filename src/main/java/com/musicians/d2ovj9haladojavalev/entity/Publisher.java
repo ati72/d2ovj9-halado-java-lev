@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "publisher")
 @Data
@@ -24,6 +26,8 @@ public class Publisher {
     private String location;
     @NotBlank
     private String emailAddress;
+    @OneToMany(mappedBy = "publisher")
+    private Set<Artist> artists;
 
     //todo: bands... oneToMany
 }

@@ -2,30 +2,33 @@ package com.musicians.d2ovj9haladojavalev.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.Set;
+
 @Entity
-@Table(name = "instrument")
+@Table(name = "album")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Instrument {
+public class Album {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotBlank
-    private String manufacturer;
+    private String title;
     @NotBlank
-    private String type;
+    private String year;
+    @ManyToOne
+    @JoinColumn(name = "artist_id", nullable = false)
+    private Artist artist;
 
-    //Todo lehetne enum
-    @NotBlank
-    private String instrumentClass;
+
+    // TODO: artist összekapcs
 
 
 }

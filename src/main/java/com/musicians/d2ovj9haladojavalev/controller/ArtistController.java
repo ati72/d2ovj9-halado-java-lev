@@ -20,27 +20,27 @@ public class ArtistController {
         artistService = theArtistService;
     }
 
-    @GetMapping("/getArtist/{id}")
+    @GetMapping("/artist/{id}")
     public Artist getArtist(@PathVariable Long id) {
         return artistService.getArtist(id);
     }
 
-    @GetMapping("/getAllArtist")
+    @GetMapping("/artist")
     public ArrayList<Artist> getAllArtist() {
         return artistService.getAllArtist();
     }
 
-    @GetMapping("/getAllArtist/{genre}")
+    @GetMapping("/artist/{genre}")
     public ArrayList<Artist> getAllArtistByGenre(@PathVariable String genre) {
         return artistService.getAllArtistByGenre(genre);
     }
 
-    @GetMapping("getAllArtist/{year}")
+    @GetMapping("artist/{year}")
     public ArrayList<Artist> getAllArtistByYear(@PathVariable int year) {
         return artistService.getAllArtistByYear(year);
     }
 
-    @PostMapping("/addArtist")
+    @PostMapping("/artist")
     public Artist addArtist(@Valid @RequestBody Artist theArtist, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
@@ -49,7 +49,7 @@ public class ArtistController {
         return theArtist;
     }
 
-    @PutMapping("/updateArtist/{id}")
+    @PutMapping("/artist/{id}")
     public Artist updateArtist(@PathVariable Long id, @Valid @RequestBody Artist theArtist, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
@@ -59,7 +59,7 @@ public class ArtistController {
         return theArtist;
     }
 
-    @DeleteMapping("/deleteArtist/{id}")
+    @DeleteMapping("/artist/{id}")
     public void deleteArtist(@PathVariable Long id) {
         artistService.deleteArtist(id);
     }
