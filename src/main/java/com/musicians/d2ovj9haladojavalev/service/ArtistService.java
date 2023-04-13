@@ -1,6 +1,8 @@
 package com.musicians.d2ovj9haladojavalev.service;
 
 
+import com.musicians.d2ovj9haladojavalev.dto.ArtistDTO;
+import com.musicians.d2ovj9haladojavalev.entity.Album;
 import com.musicians.d2ovj9haladojavalev.entity.Artist;
 import com.musicians.d2ovj9haladojavalev.persist.ArtistDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ArtistService {
@@ -22,8 +25,8 @@ public class ArtistService {
         artistDAO.save(theArtist);
     }
 
-    public ArrayList<Artist> getAllArtist() {
-        return (ArrayList<Artist>) artistDAO.findAll();
+    public List<Artist> getAllArtist() {
+        return (List<Artist>) artistDAO.findAll();
     }
 
     public Artist getArtist(Long id) {
@@ -45,4 +48,26 @@ public class ArtistService {
     public void addMultipleArtists(List<Artist> artists) {
         artistDAO.saveAll(artists);
     }
+
+    // DTO stuff
+    public List<ArtistDTO> getAllArtistDto() {
+        List<Artist> artistList = (List<Artist>) artistDAO.findAll();
+        return artistList
+                .stream()
+                .map(artist -> new ArtistDTO(
+                        artist.getId(),
+                        artist.getName(),
+                        artist.getFormed(),
+                        artist.getGenre(),
+                        artist.getAlbums()
+                                .stream()
+                                .map(Album::getTitle)
+                                .collect(Collectors.toList()),
+                        artist.getPublisher() == null ? "No data" :
+                                artist.getPublisher().getName()
+                        )
+                )
+                .collect(Collectors.toList());
+    }
+
 }

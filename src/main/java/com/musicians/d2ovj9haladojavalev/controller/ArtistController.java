@@ -1,5 +1,6 @@
 package com.musicians.d2ovj9haladojavalev.controller;
 
+import com.musicians.d2ovj9haladojavalev.dto.ArtistDTO;
 import com.musicians.d2ovj9haladojavalev.entity.Album;
 import com.musicians.d2ovj9haladojavalev.entity.Artist;
 import com.musicians.d2ovj9haladojavalev.entity.Musician;
@@ -34,9 +35,16 @@ public class ArtistController {
         return artistService.getArtist(id);
     }
 
+    // ehelyett DTO
     @GetMapping("/artist")
-    public ArrayList<Artist> getAllArtist() {
+    public List<Artist> getAllArtist() {
         return artistService.getAllArtist();
+    }
+
+    // ez lesz a dto-s impl
+    @GetMapping("/artistdto")
+    public List<ArtistDTO> getAllArtistDto() {
+        return artistService.getAllArtistDto();
     }
 
     @GetMapping("/artist/genre/{genre}")
