@@ -1,13 +1,15 @@
 package com.musicians.d2ovj9haladojavalev.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -15,7 +17,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Publisher {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,8 +28,16 @@ public class Publisher {
     private String location;
     @NotBlank
     private String emailAddress;
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "publisher")
-    private Set<Artist> artists;
+    // @JsonManagedReference
+    private Set<Artist> artists = new HashSet<>();
 
     //todo: bands... oneToMany
+
+    public void addArtists(Artist artist) {
+        this.artists.add(artist);
+        artist.setPublisher(this);
+    }
+
 }

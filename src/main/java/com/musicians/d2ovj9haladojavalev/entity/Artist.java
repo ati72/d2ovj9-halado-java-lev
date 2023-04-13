@@ -1,14 +1,17 @@
 package com.musicians.d2ovj9haladojavalev.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -16,7 +19,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Artist {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,10 +37,12 @@ public class Artist {
     private String genre;
 
     @OneToMany(mappedBy = "artist")
-    private Set<Album> albums;
+    @EqualsAndHashCode.Exclude
+    private Set<Album> albums = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "publisher_id", nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
+    // @JsonBackReference
+    @JoinColumn(name = "publisher_id",  nullable = true)
     private Publisher publisher;
 
     @ManyToMany
@@ -46,5 +51,16 @@ public class Artist {
             joinColumns = @JoinColumn(name = "artist_id"),
             inverseJoinColumns = @JoinColumn(name = "musician_id")
     )
-    private Set<Musician> members;
+    private Set<Musician> members = new HashSet<>();
+
+    public void setArtistMusicianRelationship(Musician musician) {
+        members.add(musician);
+    }
+
+    public void addAlbum(Album album) {
+        this.albums.add(album);
+    }
+
+
+
 }
