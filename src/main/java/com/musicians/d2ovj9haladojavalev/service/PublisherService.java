@@ -1,10 +1,14 @@
 package com.musicians.d2ovj9haladojavalev.service;
 
+import com.musicians.d2ovj9haladojavalev.dto.PublisherDTO;
+import com.musicians.d2ovj9haladojavalev.entity.Artist;
 import com.musicians.d2ovj9haladojavalev.entity.Publisher;
 import com.musicians.d2ovj9haladojavalev.persist.PublisherDAO;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PublisherService {
@@ -28,5 +32,19 @@ public class PublisherService {
 
     public void deletePublisherById(Long id) {
         publisherDAO.deleteById(id);
+    }
+
+    public List<PublisherDTO> getAllPublishersDto() {
+        List<Publisher> publisherList = (List<Publisher>) publisherDAO.findAll();
+        return publisherList.stream()
+                .map(publisher -> new PublisherDTO(
+                        publisher.getId(),
+                        publisher.getName(),
+                        publisher.getLocation(),
+                        publisher.getArtists()
+                                .stream()
+                                .map(Artist::getName)
+                                .collect(Collectors.toList())
+                )).collect(Collectors.toList());
     }
 }

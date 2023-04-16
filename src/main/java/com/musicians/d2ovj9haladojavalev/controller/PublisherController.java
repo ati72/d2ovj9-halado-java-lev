@@ -1,7 +1,9 @@
 package com.musicians.d2ovj9haladojavalev.controller;
 
+import com.musicians.d2ovj9haladojavalev.dto.PublisherDTO;
 import com.musicians.d2ovj9haladojavalev.entity.Artist;
 import com.musicians.d2ovj9haladojavalev.entity.Publisher;
+import com.musicians.d2ovj9haladojavalev.exception.DataNotFoundException;
 import com.musicians.d2ovj9haladojavalev.service.ArtistService;
 import com.musicians.d2ovj9haladojavalev.service.PublisherService;
 import jakarta.validation.Valid;
@@ -9,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -24,6 +27,15 @@ public class PublisherController {
     @GetMapping("/publisher")
     public ArrayList<Publisher> getAllPublisher() {
         return publisherService.getAllPublisher();
+    }
+
+    @GetMapping("/publisherdto")
+    public List<PublisherDTO> getAllPublishersDto() {
+        List<PublisherDTO> publisherList = publisherService.getAllPublishersDto();
+        if (publisherList.isEmpty()) {
+            throw new DataNotFoundException("...Whoops! No data found.");
+        }
+        return publisherList;
     }
 
     @GetMapping("/publisher/{id}")

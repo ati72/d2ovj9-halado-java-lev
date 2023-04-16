@@ -3,11 +3,14 @@ package com.musicians.d2ovj9haladojavalev.controller;
 import com.musicians.d2ovj9haladojavalev.dto.ArtistDTO;
 import com.musicians.d2ovj9haladojavalev.entity.Album;
 import com.musicians.d2ovj9haladojavalev.entity.Artist;
-import com.musicians.d2ovj9haladojavalev.entity.Musician;
+import com.musicians.d2ovj9haladojavalev.entity.Publisher;
+import com.musicians.d2ovj9haladojavalev.exception.ApiException;
 import com.musicians.d2ovj9haladojavalev.exception.DataNotFoundException;
+import com.musicians.d2ovj9haladojavalev.exception.ValidationErrorException;
 import com.musicians.d2ovj9haladojavalev.service.AlbumService;
 import com.musicians.d2ovj9haladojavalev.service.ArtistService;
 import com.musicians.d2ovj9haladojavalev.service.MusicianService;
+import com.musicians.d2ovj9haladojavalev.service.PublisherService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
@@ -23,13 +27,17 @@ public class ArtistController {
     private final ArtistService artistService;
     private final MusicianService musicianService;
     private final AlbumService albumService;
+    private final PublisherService publisherService;
 
     @Autowired
     public ArtistController(ArtistService theArtistService,
-                            MusicianService musicianService, AlbumService albumService) {
+                            MusicianService musicianService,
+                            AlbumService albumService,
+                            PublisherService publisherService) {
         artistService = theArtistService;
         this.musicianService = musicianService;
         this.albumService = albumService;
+        this.publisherService = publisherService;
     }
 
     @GetMapping("/artist/{id}")
@@ -83,6 +91,18 @@ public class ArtistController {
     public Artist addArtist(@Valid @RequestBody Artist theArtist, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
+            // todo: ezt nem így kell
+            // throw new ValidationErrorException("Whoops! Something's wrong in your request.");
+        }
+        if (theArtist.getPublisher() != null) {
+            try {
+                Publisher publisher =
+                        publisherService.getPublisherById(theArtist.getPublisher().getId());
+                theArtist.setPublisher(publisher);
+            } catch (NoSuchElementException e) {
+                throw new DataNotFoundException("Whoops! Cannot find publisher with id: "
+                        + theArtist.getPublisher().getId());
+            }
         }
         artistService.addArtist(theArtist);
         return theArtist;
@@ -99,7 +119,8 @@ public class ArtistController {
     }
 
     @PutMapping("/artist/{id}")
-    public Artist updateArtist(@PathVariable Long id, @Valid @RequestBody Artist theArtist, BindingResult bindingResult) {
+    public Artist updateArtist(@PathVariable Long id, @Valid @RequestBody Artist theArtist,
+                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
         }
