@@ -1,5 +1,6 @@
 package com.musicians.d2ovj9haladojavalev.controller;
 
+import com.musicians.d2ovj9haladojavalev.dto.MusicianDTO;
 import com.musicians.d2ovj9haladojavalev.entity.Musician;
 import com.musicians.d2ovj9haladojavalev.service.MusicianService;
 import jakarta.validation.Valid;
@@ -8,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -23,6 +25,11 @@ public class MusicianController {
     @GetMapping("/musician")
     public ArrayList<Musician> getAllMusicians() {
         return musicianService.getAllMusicians();
+    }
+
+    @GetMapping("/musiciandto")
+    public List<MusicianDTO> getAllMusiciansDto() {
+        return musicianService.getAllMusiciansDto();
     }
 
     @GetMapping("/musician/{id}")
