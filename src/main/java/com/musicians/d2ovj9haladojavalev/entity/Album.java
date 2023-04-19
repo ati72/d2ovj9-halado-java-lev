@@ -22,9 +22,9 @@ public class Album {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotBlank
+    @NotBlank(message = "Title must not be blank!")
     private String title;
-    @NotBlank
+    @NotBlank(message = "Release year must not be blank!")
     private String releaseYear;
     @ManyToOne
     @JoinColumn(name = "artist_id", nullable = true)

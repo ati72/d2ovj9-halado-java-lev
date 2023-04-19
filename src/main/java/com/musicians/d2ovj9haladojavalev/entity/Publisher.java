@@ -21,11 +21,11 @@ public class Publisher {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotBlank
+    @NotBlank(message = "Name must not be blank!")
     private String name;
-    @NotBlank
+    @NotBlank(message = "Location must not be blank!")
     private String location;
-    @NotBlank
+    @NotBlank(message = "Email address must not be blank")
     private String emailAddress;
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "publisher")

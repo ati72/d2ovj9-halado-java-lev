@@ -25,15 +25,15 @@ public class Artist {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Name must not be blank!")
     private String name;
 
     // inthez nincs notblank
-    @NotNull
-    @Min(1900)
+    @NotNull(message = "Formed must not be null!")
+    @Min(value = 1900, message = "Formed must be greater than 1900")
     private int formed;
 
-    @NotBlank
+    @NotBlank(message = "Genre must not be blank!")
     private String genre;
 
     @OneToMany(mappedBy = "artist")

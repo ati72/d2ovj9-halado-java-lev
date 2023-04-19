@@ -28,15 +28,15 @@ public class Musician {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotBlank
+    @NotBlank(message = "First name must not be blank!")
     private String firstName;
-    @NotBlank
+    @NotBlank(message = "Last name must not be blank!")
     private String lastName;
-    @NotNull
-    @Min(1920)
-    @Max(2023)
+    @NotNull(message = "Year of birt must not be null!")
+    @Min(value = 1920, message = "Year of birth must be greater than 1920!")
+    @Max(value = 2023, message = "Year of birth must be less than 2023")
     private int yearOfBirth;
-    @NotBlank
+    @NotBlank(message = "Instrument must not be blank!")
     private String instrument;
     @ManyToMany
     private Set<Artist> associatedActs;
