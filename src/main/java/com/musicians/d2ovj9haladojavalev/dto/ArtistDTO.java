@@ -19,6 +19,7 @@ public class ArtistDTO {
     String genre;
     List<String> albums;
     String publisher;
+    List<String> members;
 
     // TODO: add members
 

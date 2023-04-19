@@ -4,11 +4,13 @@ package com.musicians.d2ovj9haladojavalev.service;
 import com.musicians.d2ovj9haladojavalev.dto.ArtistDTO;
 import com.musicians.d2ovj9haladojavalev.entity.Album;
 import com.musicians.d2ovj9haladojavalev.entity.Artist;
+import com.musicians.d2ovj9haladojavalev.entity.Musician;
 import com.musicians.d2ovj9haladojavalev.persist.ArtistDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,7 +66,12 @@ public class ArtistService {
                                 .map(Album::getTitle)
                                 .collect(Collectors.toList()),
                         artist.getPublisher() == null ? "No data" :
-                                artist.getPublisher().getName()
+                                artist.getPublisher().getName(),
+                        artist.getMembers().isEmpty() ? List.of("No data") : // a no daták helyett lehet valami más kéne?
+                                artist.getMembers()
+                                        .stream()
+                                        .map(Musician::getFullName)
+                                        .collect(Collectors.toList())
                         )
                 )
                 .collect(Collectors.toList());

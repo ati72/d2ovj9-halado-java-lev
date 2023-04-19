@@ -92,8 +92,6 @@ public class ArtistController {
     public Artist addArtist(@Valid @RequestBody Artist theArtist, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
-            // todo: ezt nem így kell
-            // throw new ValidationErrorException("Whoops! Something's wrong in your request.");
         }
         if (theArtist.getPublisher() != null) {
             try {
@@ -101,7 +99,8 @@ public class ArtistController {
                         publisherService.getPublisherById(theArtist.getPublisher().getId());
                 theArtist.setPublisher(publisher);
             } catch (NoSuchElementException e) {
-                throw new DataNotFoundException("Whoops! Cannot find publisher with id: "
+                throw new DataNotFoundException(
+                        "Whoops! Cannot find publisher with id: "
                         + theArtist.getPublisher().getId());
             }
         }

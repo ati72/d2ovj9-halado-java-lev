@@ -5,10 +5,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Set;
 
@@ -39,5 +36,10 @@ public class Musician {
     @NotBlank(message = "Instrument must not be blank!")
     private String instrument;
     @ManyToMany
+    @EqualsAndHashCode.Exclude
     private Set<Artist> associatedActs;
+
+    public String getFullName() {
+        return this.getFirstName() + " " + this.getLastName();
+    }
 }
