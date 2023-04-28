@@ -40,7 +40,8 @@ public class AlbumService {
                 .stream()
                 .map(album -> new AlbumDTO(
                         album.getId(),
-                        album.getArtist().getName(),
+                        album.getArtist() == null ? "No data"
+                                :album.getArtist().getName(),
                         album.getTitle(),
                         album.getReleaseYear()
                 )).collect(Collectors.toList());

@@ -42,4 +42,8 @@ public class Musician {
     public String getFullName() {
         return this.getFirstName() + " " + this.getLastName();
     }
+
+    public void deleteArtist(Artist artist) {
+        this.associatedActs.remove(artist);
+    }
 }

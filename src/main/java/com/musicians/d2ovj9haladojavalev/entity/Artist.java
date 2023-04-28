@@ -40,7 +40,7 @@ public class Artist {
     @EqualsAndHashCode.Exclude
     private Set<Album> albums = new HashSet<>();
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     // @JsonBackReference
     @JoinColumn(name = "publisher_id",  nullable = true)
     private Publisher publisher;

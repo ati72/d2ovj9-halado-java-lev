@@ -39,4 +39,8 @@ public class Publisher {
         artist.setPublisher(this);
     }
 
+    public void deleteArtist(Artist artist) {
+        this.artists.remove(artist);
+    }
+
 }

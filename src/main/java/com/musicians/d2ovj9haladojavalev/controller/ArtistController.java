@@ -79,7 +79,7 @@ public class ArtistController {
         return artists;
     }
 
-    @GetMapping("artist/{year}")
+    @GetMapping("artist/year/{year}")
     public ArrayList<Artist> getAllArtistByYear(@PathVariable int year) {
         ArrayList<Artist> artists = artistService.getAllArtistByYear(year);
         if (artists.isEmpty()) {
@@ -145,12 +145,28 @@ public class ArtistController {
         return artist;
     }
 
+    // TODO: JdbcSQLIntegrityConstraintViolationException
     @DeleteMapping("/artist/{id}")
     public String deleteArtist(@PathVariable Long id) {
         Artist artist = artistService.getArtist(id);
         if (artist == null) {
             throw new DataNotFoundException("...Whoops! Artist with id " + id + " not found.");
         } else {
+            // referencia törlése albumból
+            if (!artist.getAlbums().isEmpty()) {
+                artist.getAlbums()
+                        .forEach(album -> album.setArtist(null));
+            }
+            // referencia törlés publisherből
+            if (artist.getPublisher() != null) {
+                artist.getPublisher().deleteArtist(artist);
+            }
+            // referencia törlés musicianból
+            // még nem teszteltem!
+            if (!artist.getMembers().isEmpty()) {
+                artist.getMembers()
+                        .forEach(musician -> musician.deleteArtist(artist));
+            }
             artistService.deleteArtist(id);
         }
         return "Artist deleted with id: " + id;
