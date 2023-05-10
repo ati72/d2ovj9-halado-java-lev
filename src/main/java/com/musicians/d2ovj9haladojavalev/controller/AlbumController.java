@@ -49,15 +49,8 @@ public class AlbumController {
             System.out.println(bindingResult.getAllErrors());
         }
         if (album.getArtist() != null) {
-            try {
-                Artist artist = artistService.getArtist(album.getArtist().getId());
-                album.setArtist(artist);
-            } catch (NoSuchElementException e){
-                throw new DataNotFoundException(
-                        "Whoops. Cannot find artist with id:" +
-                                album.getArtist().getId()
-                );
-            }
+            Artist artist = artistService.getArtist(album.getArtist().getId());
+            album.setArtist(artist);
         }
         albumService.addAlbum(album);
         return album;

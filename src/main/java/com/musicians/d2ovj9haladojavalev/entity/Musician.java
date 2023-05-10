@@ -17,11 +17,6 @@ import java.util.Set;
 @ToString
 public class Musician {
 
-    // todo: manytomany -> egy zenész szerepelhet több zenekarban, egy zenekarban több zenész játszik
-    // todo: regex meg ilyenek
-    // todo: táblák összekapcsolása, DTO implementálás
-    // todo: exceptions
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

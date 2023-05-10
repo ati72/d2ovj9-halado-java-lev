@@ -30,8 +30,4 @@ public class Album {
     @JoinColumn(name = "artist_id", nullable = true)
     private Artist artist;
 
-
-    // TODO: artist összekapcs
-
-
 }

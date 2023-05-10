@@ -32,8 +32,6 @@ public class Publisher {
     // @JsonManagedReference
     private Set<Artist> artists = new HashSet<>();
 
-    //todo: bands... oneToMany
-
     public void addArtists(Artist artist) {
         this.artists.add(artist);
         artist.setPublisher(this);
