@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/artist")
 public class ArtistController {
 
     private final ArtistService artistService;
@@ -41,54 +41,34 @@ public class ArtistController {
         this.publisherService = publisherService;
     }
 
-    @GetMapping("/artist/{id}")
+    @GetMapping("/{id}")
     public Artist getArtist(@PathVariable Long id) {
-        Artist artist = artistService.getArtist(id);
-        if (artist == null) {
-            throw new DataNotFoundException("...Whoops! No data found.");
-        }
-        return artist;
+        return artistService.getArtist(id);
     }
 
     // ehelyett DTO
-    @GetMapping("/artist")
+    @GetMapping
     public List<Artist> getAllArtist() {
-        List<Artist> artistList = artistService.getAllArtist();
-        if (artistList.isEmpty()) {
-            throw new DataNotFoundException("...Whoops! No data found.");
-        }
-        return artistList;
+        return artistService.getAllArtist();
     }
 
     // ez lesz a dto-s impl
-    @GetMapping("/artistdto")
+    @GetMapping("/dto")
     public List<ArtistDTO> getAllArtistDto() {
-        List<ArtistDTO> artistList = artistService.getAllArtistDto();
-        if (artistList.isEmpty()) {
-            throw new DataNotFoundException("...Whoops! No data found.");
-        }
-        return artistList;
+        return artistService.getAllArtistDto();
     }
 
-    @GetMapping("/artist/genre/{genre}")
+    @GetMapping("/genre/{genre}")
     public ArrayList<Artist> getAllArtistByGenre(@PathVariable String genre) {
-        ArrayList<Artist> artists = artistService.getAllArtistByGenre(genre);
-        if (artists.isEmpty()) {
-            throw new DataNotFoundException("...Whoops! No data found.");
-        }
-        return artists;
+        return artistService.getAllArtistByGenre(genre);
     }
 
-    @GetMapping("artist/year/{year}")
+    @GetMapping("/year/{year}")
     public ArrayList<Artist> getAllArtistByYear(@PathVariable int year) {
-        ArrayList<Artist> artists = artistService.getAllArtistByYear(year);
-        if (artists.isEmpty()) {
-            throw new DataNotFoundException("...Whoops! No data found.");
-        }
-        return artists;
+        return artistService.getAllArtistByYear(year);
     }
 
-    @PostMapping("/artist")
+    @PostMapping
     public Artist addArtist(@Valid @RequestBody Artist theArtist, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
@@ -108,7 +88,7 @@ public class ArtistController {
         return theArtist;
     }
 
-    @PostMapping("/artist/addMultiple")
+    @PostMapping("/addMultiple")
     public List<Artist> addMultipleArtists(@Valid @RequestBody List<Artist> artists,
                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -118,7 +98,7 @@ public class ArtistController {
         return artists;
     }
 
-    @PutMapping("/artist/{id}")
+    @PutMapping("/{id}")
     public Artist updateArtist(@PathVariable Long id, @Valid @RequestBody Artist theArtist,
                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -129,13 +109,14 @@ public class ArtistController {
         return theArtist;
     }
 
-    @PutMapping("/artist/{artistId}/album/{albumId}")
+    @PutMapping("/{artistId}/album/{albumId}")
     public Artist setArtistMusicianRelationship(
             @PathVariable Long artistId,
             @PathVariable Long albumId
     ) {
         Artist artist = artistService.getArtist(artistId);
         Album album = albumService.getAlbumById(albumId);
+        // TODO: lehet ez már nem kell mert service-ekben meg van oldva?
         if (artist == null || album == null) {
             throw new DataNotFoundException("...Whoops! No data found.");
         }
@@ -146,7 +127,7 @@ public class ArtistController {
     }
 
     // TODO: JdbcSQLIntegrityConstraintViolationException
-    @DeleteMapping("/artist/{id}")
+    @DeleteMapping("/{id}")
     public String deleteArtist(@PathVariable Long id) {
         Artist artist = artistService.getArtist(id);
         if (artist == null) {

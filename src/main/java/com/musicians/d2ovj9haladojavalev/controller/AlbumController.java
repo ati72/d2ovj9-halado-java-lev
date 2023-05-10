@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/album")
 public class AlbumController {
     private final AlbumService albumService;
     private final ArtistService artistService;
@@ -27,22 +27,22 @@ public class AlbumController {
         this.artistService = artistService;
     }
 
-    @GetMapping("/album")
+    @GetMapping
     public ArrayList<Album> getAllAlbum() {
         return albumService.getAllAlbum();
     }
 
-    @GetMapping("/albumdto")
+    @GetMapping("/dto")
     public List<AlbumDTO> getAllAlbumDto() {
         return albumService.getAllAlbumDto();
     }
 
-    @GetMapping("/album/{id}")
+    @GetMapping("/{id}")
     public Album getAlbumById(@PathVariable Long id) {
         return albumService.getAlbumById(id);
     }
 
-    @PostMapping("/album")
+    @PostMapping
     public Album addAlbum(@Valid @RequestBody Album album,
                           BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -63,14 +63,11 @@ public class AlbumController {
         return album;
     }
 
-    @DeleteMapping("/album/{id}")
+    @DeleteMapping("/{id}")
     public String deleteAlbumById(@PathVariable Long id) {
         Album album = albumService.getAlbumById(id);
-        if (album == null) {
-            throw new DataNotFoundException("Whoops! Album with id " + id + " not found.");
-        } else {
-            albumService.deleteAlbumById(id);
-        }
+        albumService.deleteAlbumById(id);
+
         return "Artist deleted with id: " + id;
     }
 }

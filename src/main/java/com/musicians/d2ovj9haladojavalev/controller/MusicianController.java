@@ -12,10 +12,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/musician")
 public class MusicianController {
 
     private final MusicianService musicianService;
@@ -27,27 +26,27 @@ public class MusicianController {
         this.artistService = artistService;
     }
 
-    @GetMapping("/musician")
+    @GetMapping
     public ArrayList<Musician> getAllMusicians() {
         return musicianService.getAllMusicians();
     }
 
-    @GetMapping("/musiciandto")
+    @GetMapping("/dto")
     public List<MusicianDTO> getAllMusiciansDto() {
         return musicianService.getAllMusiciansDto();
     }
 
-    @GetMapping("/musician/{id}")
+    @GetMapping("/{id}")
     public Musician getMusicianById(@PathVariable Long id) {
         return musicianService.getMusicianById(id);
     }
 
-    @GetMapping("/musician/{instrument}")
+    @GetMapping("/{instrument}")
     public Musician getMusicianByInstrument(@PathVariable String instrument) {
         return musicianService.getMusicianByInstrument(instrument);
     }
 
-    @PostMapping("/musician")
+    @PostMapping
     public void addMusician(@Valid @RequestBody Musician musician, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
@@ -73,7 +72,7 @@ public class MusicianController {
         musicianService.addMusician(musician);
     }
 
-    @PutMapping("musician/{id}")
+    @PutMapping("/{id}")
     public Musician updateMusicianById(@PathVariable Long id, @Valid @RequestBody Musician musician,
                                        BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -84,7 +83,7 @@ public class MusicianController {
         return musician;
     }
 
-    @DeleteMapping("/musician/{id}")
+    @DeleteMapping("/{id}")
     public void deleteMusicianById(@PathVariable Long id) {
         musicianService.deleteMusicianById(id);
     }

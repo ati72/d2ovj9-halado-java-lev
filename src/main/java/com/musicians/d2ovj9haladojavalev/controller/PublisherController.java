@@ -3,7 +3,6 @@ package com.musicians.d2ovj9haladojavalev.controller;
 import com.musicians.d2ovj9haladojavalev.dto.PublisherDTO;
 import com.musicians.d2ovj9haladojavalev.entity.Artist;
 import com.musicians.d2ovj9haladojavalev.entity.Publisher;
-import com.musicians.d2ovj9haladojavalev.exception.DataNotFoundException;
 import com.musicians.d2ovj9haladojavalev.service.ArtistService;
 import com.musicians.d2ovj9haladojavalev.service.PublisherService;
 import jakarta.validation.Valid;
@@ -12,10 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/publisher")
 public class PublisherController {
     private final PublisherService publisherService;
     private final ArtistService artistService;
@@ -24,26 +22,22 @@ public class PublisherController {
         this.artistService = artistService;
     }
 
-    @GetMapping("/publisher")
+    @GetMapping
     public ArrayList<Publisher> getAllPublisher() {
         return publisherService.getAllPublisher();
     }
 
-    @GetMapping("/publisherdto")
+    @GetMapping("/dto")
     public List<PublisherDTO> getAllPublishersDto() {
-        List<PublisherDTO> publisherList = publisherService.getAllPublishersDto();
-        if (publisherList.isEmpty()) {
-            throw new DataNotFoundException("...Whoops! No data found.");
-        }
-        return publisherList;
+        return publisherService.getAllPublishersDto();
     }
 
-    @GetMapping("/publisher/{id}")
+    @GetMapping("/{id}")
     public Publisher getPublisherById(@PathVariable Long id) {
         return publisherService.getPublisherById(id);
     }
 
-    @PostMapping("/publisher")
+    @PostMapping
     public Publisher addPublisher(@Valid @RequestBody Publisher publisher, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
@@ -52,7 +46,7 @@ public class PublisherController {
         return publisher;
     }
 
-    @PutMapping("/publisher/{publisherId}/artist/{artistId}")
+    @PutMapping("/{publisherId}/artist/{artistId}")
     public Publisher associatePublisherWithArtist(
             @PathVariable Long publisherId,
             @PathVariable Long artistId
@@ -64,8 +58,8 @@ public class PublisherController {
         return publisher;
     }
 
-    @DeleteMapping("/publisher/{id}")
-    public void deletePublisherById(Long id) {
+    @DeleteMapping("/{id}")
+    public void deletePublisherById(@PathVariable Long id) {
         publisherService.deletePublisherById(id);
     }
 

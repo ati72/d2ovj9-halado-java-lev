@@ -2,6 +2,7 @@ package com.musicians.d2ovj9haladojavalev.service;
 
 import com.musicians.d2ovj9haladojavalev.dto.AlbumDTO;
 import com.musicians.d2ovj9haladojavalev.entity.Album;
+import com.musicians.d2ovj9haladojavalev.exception.DataNotFoundException;
 import com.musicians.d2ovj9haladojavalev.persist.AlbumDAO;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,10 @@ public class AlbumService {
     }
 
     public Album getAlbumById(Long id) {
-        return albumDAO.findById(id).get();
+        return albumDAO.findById(id)
+                .orElseThrow(() -> new DataNotFoundException(
+                        "Whoops. Cannot find album with id: " + id
+                        ));
     }
 
     public void addAlbum(Album album) {

@@ -3,6 +3,7 @@ package com.musicians.d2ovj9haladojavalev.service;
 import com.musicians.d2ovj9haladojavalev.dto.MusicianDTO;
 import com.musicians.d2ovj9haladojavalev.entity.Artist;
 import com.musicians.d2ovj9haladojavalev.entity.Musician;
+import com.musicians.d2ovj9haladojavalev.exception.DataNotFoundException;
 import com.musicians.d2ovj9haladojavalev.persist.MusicianDAO;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +20,23 @@ public class MusicianService {
         this.musicianDAO = musicianDAO;
     }
     public ArrayList<Musician> getAllMusicians() {
-        return (ArrayList<Musician>) musicianDAO.findAll();
+        ArrayList<Musician> musicians = (ArrayList<Musician>) musicianDAO.findAll();
+        if (musicians.isEmpty()) {
+            throw new DataNotFoundException(
+                    "Whoops. No musicians found in database."
+            );
+        }
+        return musicians;
     }
 
     public Musician getMusicianById(Long id) {
-        return musicianDAO.findById(id).get();
+        return musicianDAO.findById(id)
+                .orElseThrow(() -> new DataNotFoundException(
+                        "Whoops. No musician found with id: " + id
+                ));
     }
 
+    //TODO: ezt át kéne írni úgy, hogy listát küld vissza, nem csak egyet...
     public Musician getMusicianByInstrument(String instrument) {
         return musicianDAO.findMusicianByInstrument(instrument);
     }
@@ -40,6 +51,11 @@ public class MusicianService {
 
     public List<MusicianDTO> getAllMusiciansDto() {
         List<Musician> musicianList = (List<Musician>) musicianDAO.findAll();
+        if (musicianList.isEmpty()) {
+            throw new DataNotFoundException(
+                    "Whoops. No musicians found in database."
+            );
+        }
         return musicianList
                 .stream()
                 .map(musician -> new MusicianDTO(

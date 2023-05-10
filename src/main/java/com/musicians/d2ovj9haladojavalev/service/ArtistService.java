@@ -5,18 +5,18 @@ import com.musicians.d2ovj9haladojavalev.dto.ArtistDTO;
 import com.musicians.d2ovj9haladojavalev.entity.Album;
 import com.musicians.d2ovj9haladojavalev.entity.Artist;
 import com.musicians.d2ovj9haladojavalev.entity.Musician;
+import com.musicians.d2ovj9haladojavalev.exception.DataNotFoundException;
 import com.musicians.d2ovj9haladojavalev.persist.ArtistDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class ArtistService {
-    private ArtistDAO artistDAO;
+    private final ArtistDAO artistDAO;
 
     @Autowired
     public ArtistService(ArtistDAO theArtistDao) {
@@ -28,11 +28,20 @@ public class ArtistService {
     }
 
     public List<Artist> getAllArtist() {
+        List<Artist> artists = (List<Artist>) artistDAO.findAll();
+        if (artists.isEmpty()) {
+            throw new DataNotFoundException(
+                    "Whoops. No artists found in database."
+            );
+        }
         return (List<Artist>) artistDAO.findAll();
     }
 
     public Artist getArtist(Long id) {
-        return artistDAO.findById(id).get();
+        return artistDAO.findById(id)
+                .orElseThrow(() -> new DataNotFoundException(
+                        "Whoops. No artist found with id: " + id
+                ));
     }
 
     public void deleteArtist(Long id) {
@@ -40,11 +49,23 @@ public class ArtistService {
     }
 
     public ArrayList<Artist> getAllArtistByGenre(String genre) {
-        return artistDAO.findArtistsByGenre(genre);
+        ArrayList<Artist> artists = artistDAO.findArtistsByGenre(genre);
+        if (artists.isEmpty()) {
+            throw new DataNotFoundException(
+                    "Whoops. No artists found in database with this genre: " + genre
+            );
+        }
+        return artists;
     }
 
     public ArrayList<Artist> getAllArtistByYear(int year) {
-        return artistDAO.findArtistsByFormedAfter(year);
+        ArrayList<Artist> artists = artistDAO.findArtistsByFormedAfter(year);
+        if (artists.isEmpty()) {
+            throw new DataNotFoundException(
+                    "Whoops. No artists found in database formed after this year: " + year
+            );
+        }
+        return artists;
     }
 
     public void addMultipleArtists(List<Artist> artists) {
@@ -54,6 +75,11 @@ public class ArtistService {
     // DTO stuff
     public List<ArtistDTO> getAllArtistDto() {
         List<Artist> artistList = (List<Artist>) artistDAO.findAll();
+        if (artistList.isEmpty()) {
+            throw new DataNotFoundException(
+                    "Whoops. No artists found in database."
+            );
+        }
         return artistList
                 .stream()
                 .map(artist -> new ArtistDTO(

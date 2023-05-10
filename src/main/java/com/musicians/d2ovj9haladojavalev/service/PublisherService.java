@@ -3,6 +3,7 @@ package com.musicians.d2ovj9haladojavalev.service;
 import com.musicians.d2ovj9haladojavalev.dto.PublisherDTO;
 import com.musicians.d2ovj9haladojavalev.entity.Artist;
 import com.musicians.d2ovj9haladojavalev.entity.Publisher;
+import com.musicians.d2ovj9haladojavalev.exception.DataNotFoundException;
 import com.musicians.d2ovj9haladojavalev.persist.PublisherDAO;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +20,20 @@ public class PublisherService {
     }
 
     public ArrayList<Publisher> getAllPublisher() {
-        return (ArrayList<Publisher>) publisherDAO.findAll();
+        ArrayList<Publisher> publishers = (ArrayList<Publisher>) publisherDAO.findAll();
+        if (publishers.isEmpty()) {
+            throw new DataNotFoundException(
+                    "Whooops. No publishers found in database."
+            );
+        }
+        return publishers;
     }
 
     public Publisher getPublisherById(Long id) {
-        return publisherDAO.findById(id).get();
+        return publisherDAO.findById(id)
+                .orElseThrow(() -> new DataNotFoundException(
+                        "Whoops. No publisher found with id: " + id
+                ));
     }
 
     public void addPublisher(Publisher publisher) {
@@ -36,6 +46,11 @@ public class PublisherService {
 
     public List<PublisherDTO> getAllPublishersDto() {
         List<Publisher> publisherList = (List<Publisher>) publisherDAO.findAll();
+        if (publisherList.isEmpty()) {
+            throw new DataNotFoundException(
+                    "Whoops. No publishers found in database."
+            );
+        }
         return publisherList.stream()
                 .map(publisher -> new PublisherDTO(
                         publisher.getId(),
